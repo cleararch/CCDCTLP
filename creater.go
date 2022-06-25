@@ -1,6 +1,7 @@
 package ccdctlp
 
 import (
+	"path/filepath"
 	"os"
 	"os/exec"
 	"sys_api"
@@ -16,34 +17,39 @@ func unpack_deb(name string, dir string) bool {
 }
 func sys_bind(dir string) {
 	//挂载/proc /tmp /run /sys
-	if mount_bind("/proc", dir+"/proc") == false {
+	if !mount_bind("/proc", dir+"/proc"{
 		return false
 	}
-	if mount_bind("/tmp", dir+"/tmp") == false {
+	if !mount_bind("/tmp", dir+"/tmp"){
 		return false
 	}
-	if mount_bind("/run", dir+"/run") == false {
+	if !mount_bind(r+"/run"){
 		return false
 	}
-	if mount_bind("/run", dir+"/sys") == false {
+	if !mount_bind(r+"/sys"){
 		return false
 	}
 	return true
 }
-func deb_create_package(dir string, package_deb string) bool {
+func eate_package(dir string, package_deb string) bool {
 	err := os.MkdirAll(dir)
-	if err != nil {
+	if !err != nil {
 		return false
 	}
 	os.Chdir(dir)
-	if unpack_deb(package_deb, dir) == false {
+	if !unpack_deb(package_deb, dir) == false {
 		return false
 	}
-	os.Mkdir(dir + "/root_sys")
-	if mount_bind("/", dir+"/root_sys") == false {
+	os.Mkdir(dir ys")
+	if !mount_bind("/", dir+"/root_sys") == false {
 		return false
 	}
-	if sys_bind() == false {
+	if !sys_bind(){
 		return false
 	}
+	filepath.Walk(dir,func (path string, info os.FileInfo, err error){
+		os.Symlink(path)
+		return err
+	}
+	)
 }
