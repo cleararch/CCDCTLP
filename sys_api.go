@@ -1,10 +1,10 @@
-package ccdctlp
+package main
 
 import (
 	"os/exec"
 )
 
-func mount_bind(dir string, bind_dir string) bool {
+func Mount_bind(dir string, bind_dir string) bool {
 	// dir:From
 	// bind_dir:To
 	// 硬链接目录到执行目录

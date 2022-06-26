@@ -1,13 +1,13 @@
-package ccdctlp
+package main
 
 import (
-	"path/filepath"
+	"io/fs"
 	"os"
 	"os/exec"
-	"sys_api"
+	"path/filepath"
 )
 
-func unpack_deb(name string, dir string) bool {
+func Unpack_deb(name string, dir string) bool {
 	//解包deb
 	if exec.Command("dpkg", "-X", name, dir).Run() != nil {
 		return false
@@ -15,44 +15,44 @@ func unpack_deb(name string, dir string) bool {
 	if exec.Command("dpkg", "-e", name, dir).Run() != nil {
 		return false
 	}
+	return true
 }
-func sys_bind(dir string) {
+func Sys_bind(dir string) bool {
 	//挂载/proc /tmp /run /sys
-	if !mount_bind("/proc", dir+"/proc"{
+	if !Mount_bind("/proc", dir+"/proc") {
 		return false
 	}
-	if !mount_bind("/tmp", dir+"/tmp"){
+	if !Mount_bind("/tmp", dir+"/tmp") {
 		return false
 	}
-	if !mount_bind(r+"/run"){
+	if !Mount_bind("/run", dir+"/run") {
 		return false
 	}
-	if !mount_bind(r+"/sys"){
+	if !Mount_bind("/sys", dir+"/sys") {
 		return false
 	}
 	return true
 }
-func create_package(dir string, package_deb string) bool {
+func Create_package(dir string, package_deb string) bool {
 	// 解包deb并创建虚拟环境，暂时无法考虑配置文件
-	err := os.MkdirAll(dir)
-	if !err != nil {
+	err := os.MkdirAll(dir, 777)
+	if err != nil {
 		return false
 	}
 	os.Chdir(dir)
-	if !unpack_deb(package_deb, dir) == false {
+	if !Unpack_deb(package_deb, dir) == false {
 		return false
 	}
-	os.Mkdir(dir ys")
-	if !mount_bind("/", dir+"/root_sys") == false {
+	os.Mkdir(dir+"/root_sys", 777)
+	if !Mount_bind("/", dir+"/root_sys") == false {
 		return false
 	}
-	if !sys_bind(){
+	if !Sys_bind(dir) {
 		return false
 	}
-	filepath.Walk(dir,func (path string, info os.FileInfo, err error){
-		os.Symlink(path,dir+path)
+	filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
+		os.Symlink(path, dir+path)
 		return err
-	}
-	)
+	})
 	return true
 }
