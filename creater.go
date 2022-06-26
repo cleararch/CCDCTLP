@@ -8,6 +8,7 @@ import (
 )
 
 func unpack_deb(name string, dir string) bool {
+	//解包deb
 	if exec.Command("dpkg", "-X", name, dir).Run() != nil {
 		return false
 	}
@@ -31,7 +32,8 @@ func sys_bind(dir string) {
 	}
 	return true
 }
-func eate_package(dir string, package_deb string) bool {
+func create_package(dir string, package_deb string) bool {
+	// 解包deb并创建虚拟环境，暂时无法考虑配置文件
 	err := os.MkdirAll(dir)
 	if !err != nil {
 		return false
@@ -48,8 +50,9 @@ func eate_package(dir string, package_deb string) bool {
 		return false
 	}
 	filepath.Walk(dir,func (path string, info os.FileInfo, err error){
-		os.Symlink(path)
+		os.Symlink(path,dir+path)
 		return err
 	}
 	)
+	return true
 }
