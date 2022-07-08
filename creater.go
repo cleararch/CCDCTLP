@@ -40,17 +40,17 @@ func Create_package(dir string, package_deb string) bool {
 		return false
 	}
 	os.Chdir(dir)
-	if !Unpack_deb(package_deb, dir) == false {
+	if !Unpack_deb(package_deb, dir) {
 		return false
 	}
 	os.Mkdir(dir+"/root_sys", 777)
-	if !Mount_bind("/", dir+"/root_sys") == false {
+	if !Mount_bind("/", dir+"/root_sys") {
 		return false
 	}
 	if !Sys_bind(dir) {
 		return false
 	}
-	filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
+	filepath.Walk(dir+"/root_sys", func(path string, info fs.FileInfo, err error) error {
 		os.Symlink(path, dir+path)
 		return err
 	})
