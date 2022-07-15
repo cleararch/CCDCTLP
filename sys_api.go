@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"os/exec"
 )
 
@@ -12,5 +13,20 @@ func Mount_bind(dir string, bind_dir string) bool {
 		return false
 	} else {
 		return true
+	}
+}
+
+func APT_install(packet string, dir string) bool{
+	os.Chdir(dir)
+	cmd := exec.Command("apt", "install", packet)
+	press_y := exec.Command("echo", "y")
+	cmd.Stdin ,_ := press_y.StdoutPipe()
+	cmd.Start()
+	press_y.Run()
+	err := cmd.Wait()
+	if !err{
+		return true
+	} else{
+		return false
 	}
 }
