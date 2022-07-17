@@ -33,7 +33,7 @@ func Sys_bind(dir string) bool {
 	}
 	return true
 }
-func Create_package(dir string, package_deb string) bool {
+func Create_package(dir string, package_deb string, config []string) bool {
 	// 解包deb并创建虚拟环境，暂时无法考虑配置文件
 	err := os.MkdirAll(dir, 777)
 	if err != nil {
@@ -51,8 +51,12 @@ func Create_package(dir string, package_deb string) bool {
 		return false
 	}
 	filepath.Walk(dir+"/root_sys", func(path string, info fs.FileInfo, err error) error {
-		os.Symlink(path, dir+path)
-		return err
+		for i := 0; i++ ; i==len(config){
+			if config[i]!=path{
+				os.Symlink(path, dir+path)
+				return err
+			}
+		}
 	})
 	return true
 }
