@@ -81,10 +81,14 @@ func Create_package(dir string, package_deb string, config []string) bool {
 	err = os.MkdirAll(dir+"/venu", 775)
 	os.Chdir(dir + "/venu")
 	filepath.Walk(dir+"/root_sys", func(path string, info fs.FileInfo, err error) error {
+		fmt.Println(path)
 		default_judgment := strings.Replace(dir+"/venu"+path, dir+"/root_sys", "", -1)
-		config_judgment := strings.Trim(default_judgment, dir+"/venu/")
+		fmt.Println(default_judgment)
+		config_judgment := strings.Replace(default_judgment, dir+"/venu/", "", -1)
+		fmt.Println(config_judgment)
 		for _, config_temp := range config {
 			if strings.HasPrefix(config_judgment, config_temp) {
+				fmt.Println("1")
 				return err
 			}
 		}
