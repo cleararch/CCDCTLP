@@ -1,6 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 func main() {
-	a := []string{"etc"}
-	Create_package("/tmp/test", "/home/jack/下载/pacman.deb", a)
+	fmt.Println(Deb_uncompress("/media/jack/data/tmp", "/home/jack/下载/hello.deb"))
 }
